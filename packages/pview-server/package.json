@@ -1,0 +1,11 @@
+{
+  "name": "pview-server",
+  "version": "1.0.0",
+  "description": "node server",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "",
+  "license": "MIT"
+}
