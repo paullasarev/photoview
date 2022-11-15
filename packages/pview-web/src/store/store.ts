@@ -1,21 +1,13 @@
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
-import { routerMiddleware } from 'connected-react-router';
-import { createBrowserHistory } from 'history';
 import { persistStore, persistReducer } from 'redux-persist';
-import { applyMiddleware, createStore, compose } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension'
+import { configureStore } from '@reduxjs/toolkit';
 
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage';
 
-import { StoreType } from './types';
-import reducers from './reducers';
+import { createRootReducer, StoreType } from './reducers';
 import rootSaga from './sagas';
-
-export const history = createBrowserHistory({
-  basename: '/',
-});
 
 const persistConfig = {
   key: 'root',
@@ -24,27 +16,27 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
 };
 
-const packages: any[] = [];
-const enhancers: any[] = [];
+const isDev = process.env.NODE_ENV === 'development';
 
-// Saga
 const sagaMiddleware = createSagaMiddleware();
 
-// Push middleware that you need for both development and production
-packages.push(routerMiddleware(history));
-packages.push(sagaMiddleware);
+const middleware: any[] = [
+  sagaMiddleware,  
+];
 
-if (process.env.NODE_ENV === 'development') {
-  packages.push(createLogger());
-  enhancers.push(composeWithDevTools());
+
+if (isDev) {
+  middleware.push(createLogger());
 }
 
-const middleware = applyMiddleware(...packages);
+const rootReducer = createRootReducer();
+const reducer = persistReducer<StoreType>(persistConfig, rootReducer);
 
-export const store = createStore(
-  persistReducer<StoreType>(persistConfig, reducers),
-  compose(middleware, ...enhancers),
-);
+export const store = configureStore({
+  reducer,
+  middleware,
+  devTools: isDev,
+});
 
 sagaMiddleware.run(rootSaga);
 

@@ -13,7 +13,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 module.exports = {
 
   // Where webpack looks to start building the bundle and include polyfill
-  entry: ['whatwg-fetch', paths.src + '/index.tsx'],
+  entry: [paths.src + '/index.tsx'],
 
   // Where webpack outputs the assets and bundles
   output: {
