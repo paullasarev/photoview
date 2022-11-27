@@ -1,0 +1,3 @@
+```
+cp .example.env .env
+```
