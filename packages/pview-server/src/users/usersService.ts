@@ -1,9 +1,7 @@
 import { User } from './user';
+import { IUsersService, UserCreationParams } from './usersTypes';
 
-// A post request should not contain an id.
-export type UserCreationParams = Pick<User, 'email' | 'name' | 'phoneNumbers'>;
-
-export class UsersService {
+export class UsersService implements IUsersService {
   public get(id: number, name?: string): User {
     return {
       id,
